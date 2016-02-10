@@ -1,0 +1,8 @@
+#!/bin/sh
+#
+# usage: Launch a bash shell in the running openvpn docker container
+#    bash-ovpn-shell
+#
+
+docker run --volumes-from wink-ovpn-data --rm -it kylemanna/openvpn bash
+#docker exec -it wink-ovpn bash

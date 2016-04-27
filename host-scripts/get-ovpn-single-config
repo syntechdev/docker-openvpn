@@ -1,0 +1,7 @@
+#!/bin/sh
+# usage:
+#    get-ovpn-single-config
+#
+
+docker run --rm -it --volumes-from wink-ovpn-data --volume /tmp/openvpn_clients:/etc/openvpn/clients kylemanna/openvpn /etc/openvpn/ovpn_getclient_config $1
+

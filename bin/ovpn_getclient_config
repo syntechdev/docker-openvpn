@@ -1,0 +1,48 @@
+#!/bin/bash
+## @licence MIT <http://opensource.org/licenses/MIT>
+## @author Copyright (C) 2015 Robin Schneider <ypid@riseup.net>
+
+usage ()
+{
+        echo "
+#
+#  Usage: use $0 to get the OpenVPN client config for a single user passed as the first parameter
+# 
+#       * this script requires a minimum of one (1) existing OpenVPN user as it's single parameter
+#       
+"
+}
+
+if [ "$#" == "0" ]
+        then usage
+        exit 1
+else
+
+  if [ -z "$OPENVPN" ]; then
+    export OPENVPN="$PWD"
+  fi
+  if ! source "$OPENVPN/ovpn_env.sh"; then
+    echo "Could not source $OPENVPN/ovpn_env.sh."
+    exit 1
+  fi
+  if [ -z "$EASYRSA_PKI" ]; then
+    export EASYRSA_PKI="$OPENVPN/pki"
+  fi
+
+# Generate the OpenVPN client config for this user
+  pushd "$EASYRSA_PKI"
+  for name in issued/${1}.crt; do
+    name=${name%.crt}
+    name=${name#issued/}
+    if [ "$name" != "$OVPN_CN" ]; then
+        ovpn_getclient "$name" separated
+        ovpn_getclient "$name" combined-save
+    fi
+  done
+  popd
+
+# package the generated OpenVPN client config in a tarball named for this user 
+  pushd ${OPENVPN}/clients/
+  tar cvzf ${1}.tgz ${1}/
+  popd
+fi

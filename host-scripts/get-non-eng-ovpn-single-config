@@ -1,0 +1,7 @@
+#!/bin/sh
+# usage:
+#    get-non-eng-ovpn-single-config
+#
+
+docker run --rm -it --volumes-from wink-ovpn-data --volume /tmp/openvpn_clients:/etc/openvpn/clients -e OVPNENV=non-eng-ovpn_env.sh kylemanna/openvpn /etc/openvpn/ovpn_getclient_config $1
+

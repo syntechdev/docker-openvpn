@@ -21,8 +21,12 @@ else
   if [ -z "$OPENVPN" ]; then
     export OPENVPN="$PWD"
   fi
-  if ! source "$OPENVPN/ovpn_env.sh"; then
-    echo "Could not source $OPENVPN/ovpn_env.sh."
+# Add ability to generate files for non-eng vpn based on environment variable if OVPNENV is set to "non-eng-ovpn_env.sh"
+  if [ -z "$OVPNENV" ]; then
+    export OVPNENV="ovpn_env.sh"
+  fi
+  if ! source "$OPENVPN/$OVPNENV"; then
+    echo "Could not source $OPENVPN/$OVPNENV ..."
     exit 1
   fi
   if [ -z "$EASYRSA_PKI" ]; then
@@ -43,6 +47,7 @@ else
 
 # package the generated OpenVPN client config in a tarball named for this user 
   pushd ${OPENVPN}/clients/
-  tar cvzf ${1}.tgz ${1}/
+  tar cvzf ${1}.tgz ${1}/${1}*
   popd
+
 fi

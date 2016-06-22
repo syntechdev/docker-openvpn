@@ -1,0 +1,1 @@
+docker run --volumes-from wink-ovpn-data -v /var/log/openvpn:/var/log/openvpn --rm -p 443:1194/tcp --privileged kylemanna/openvpn ovpn_run --proto tcp
